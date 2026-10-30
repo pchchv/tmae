@@ -8,6 +8,13 @@ tg.ready()
 
 fetch("/api/open?" + tg.initData)
 
+tg.MainButton.hasShineEffect = true
+tg.MainButton.setText("Go to group")
+tg.MainButton.onClick(() => {
+    tg.openTelegramLink("https://t.me/gotelegrambotui")
+})
+tg.MainButton.show()
+
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   <div>
     <a href="https://vite.dev" target="_blank">
