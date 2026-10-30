@@ -1,6 +1,7 @@
 import './style.css'
 import viteLogo from '/vite.svg'
 import typescriptLogo from './typescript.svg'
+import { setupCounter } from './counter.ts'
 
 const tg: WebApp = window.Telegram.WebApp;
 
@@ -32,3 +33,5 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
     </p>
   </div>
 `
+
+setupCounter(document.querySelector<HTMLButtonElement>('#counter')!)
