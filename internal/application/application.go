@@ -4,6 +4,8 @@ import (
 	"embed"
 	"errors"
 	"io/fs"
+	"log"
+	"net/http"
 
 	"github.com/go-telegram/bot"
 )
@@ -35,4 +37,12 @@ func New(botToken string) (*Application, error) {
 
 	app.b = b
 	return app, nil
+}
+
+func (app *Application) handlerAPIOpen(rw http.ResponseWriter, req *http.Request) {
+	if user, ok := bot.ValidateWebappRequest(req.URL.Query(), app.botToken); !ok {
+		http.Error(rw, "unauthorized", http.StatusUnauthorized)
+	} else {
+		log.Printf("%v", user)
+	}
 }
