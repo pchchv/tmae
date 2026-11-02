@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/pchchv/env"
+	"github.com/pchchv/tmae/internal/config"
 )
 
 func init() {
@@ -25,4 +26,7 @@ func getEnvValue(v string) (string, error) {
 }
 
 func main() {
+	cfg := config.Config{
+		ListenAddress: "0.0.0.0:3000",
+	}
 }
