@@ -1,11 +1,15 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
+	"net"
 	"os"
+	"sync"
 
 	"github.com/pchchv/env"
+	"github.com/pchchv/tmae/internal/application"
 	"github.com/pchchv/tmae/internal/config"
 )
 
@@ -43,4 +47,31 @@ func main() {
 	} else {
 		cfg.TgBotToken = v
 	}
+}
+
+func run(ctx context.Context, cancel context.CancelFunc, cfg config.Config) error {
+	ln, errLn := net.Listen("tcp", cfg.ListenAddress)
+	if errLn != nil {
+		return fmt.Errorf("failed to listen: %w", errLn)
+	}
+	defer ln.Close()
+
+	app, errApp := application.New(cfg.TgBotToken)
+	if errApp != nil {
+		return fmt.Errorf("failed to create application: %w", errApp)
+	}
+
+	log.Printf("start")
+
+	var wg sync.WaitGroup
+	wg.Add(1)
+	go app.Run(ctx, cancel, &wg, ln)
+
+	<-ctx.Done()
+
+	wg.Wait()
+
+	log.Printf("done")
+
+	return nil
 }
