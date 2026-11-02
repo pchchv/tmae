@@ -29,4 +29,18 @@ func main() {
 	cfg := config.Config{
 		ListenAddress: "0.0.0.0:3000",
 	}
+
+	if v, err := getEnvValue("LISTEN_ADDRESS"); err != nil || v == "" {
+		log.Printf("error run: %v", err)
+		os.Exit(1)
+	} else {
+		cfg.ListenAddress = v
+	}
+
+	if v, err := getEnvValue("TG_BOT_TOKEN"); err != nil || v == "" {
+		log.Printf("error run: %v", err)
+		os.Exit(1)
+	} else {
+		cfg.TgBotToken = v
+	}
 }
