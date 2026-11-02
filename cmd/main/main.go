@@ -6,6 +6,7 @@ import (
 	"log"
 	"net"
 	"os"
+	"os/signal"
 	"sync"
 
 	"github.com/pchchv/env"
@@ -30,6 +31,9 @@ func getEnvValue(v string) (string, error) {
 }
 
 func main() {
+	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt)
+	defer cancel()
+
 	cfg := config.Config{
 		ListenAddress: "0.0.0.0:3000",
 	}
@@ -46,6 +50,11 @@ func main() {
 		os.Exit(1)
 	} else {
 		cfg.TgBotToken = v
+	}
+
+	if err := run(ctx, cancel, cfg); err != nil {
+		log.Printf("error run: %v", err)
+		os.Exit(1)
 	}
 }
 
